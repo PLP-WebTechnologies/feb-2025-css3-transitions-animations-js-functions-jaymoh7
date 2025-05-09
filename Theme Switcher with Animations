@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme Switcher with Animations</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --text-color: #333;
+            --bg-color: #f5f5f5;
+            --card-bg: #fff;
+            --transition-speed: 0.5s;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 28px;
+            color: var(--primary-color);
+            transition: color var(--transition-speed);
+        }
+
+        .theme-toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background-color: var(--secondary-color);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background-color var(--transition-speed);
+        }
+
+        .toggle-thumb {
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            background-color: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform var(--transition-speed);
+        }
+
+        .theme-toggle.dark .toggle-thumb {
+            transform: translateX(30px);
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color var(--transition-speed);
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            transition: color var(--transition-speed);
+        }
+
+        .card-content {
+            margin-bottom: 15px;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        .notification {
+            position: fixed;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: bottom 0.5s ease;
+            z-index: 100;
+            opacity: 0;
+        }
+
+        .notification.show {
+            bottom: 20px;
+            opacity: 1;
+        }
+
+        /* Dark theme variables */
+        body.dark-theme {
+            --primary-color: #6ab0de;
+            --secondary-color: #375a7f;
+            --text-color: #f5f5f5;
+            --bg-color: #222;
+            --card-bg: #333;
+        }
+
+        /* Animation for new cards */
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .new-card {
+            animation: cardAppear 0.5s ease forwards;
+        }
+
+        /* Color preference section */
+        .color-preference {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            transition: background-color var(--transition-speed);
+        }
+
+        .color-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .color-option:hover {
+            transform: scale(1.2);
+        }
+
+        .color-option.selected {
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Theme Switcher</h1>
+            <div class="theme-toggle" id="theme-toggle">
+                <div class="toggle-thumb"></div>
+            </div>
+        </header>
+
+        <div class="card-container" id="card-container">
+            <div class="card">
+                <h2>Welcome!</h2>
+                <div class="card-content">
+                    <p>This demo shows CSS animations and localStorage for saving preferences.</p>
+                </div>
+                <button>Learn More</button>
+            </div>
+            <div class="card">
+                <h2>Features</h2>
+                <div class="card-content">
+                    <p>• Theme switching with animations<br>
+                    • Color preference selection<br>
+                    • Preferences saved in localStorage</p>
+                </div>
+                <button>Explore</button>
+            </div>
+            <div class="card">
+                <h2>Animations</h2>
+                <div class="card-content">
+                    <p>CSS transitions make the interface feel responsive and engaging.</p>
+                </div>
+                <button>See Examples</button>
+            </div>
+        </div>
+
+        <div class="color-preference">
+            <h2>Color Preference</h2>
+            <p>Choose your accent color:</p>
+            <div class="color-options" id="color-options">
+                <div class="color-option selected" style="background-color: #3498db;" data-color="#3498db"></div>
+                <div class="color-option" style="background-color: #e74c3c;" data-color="#e74c3c"></div>
+                <div class="color-option" style="background-color: #2ecc71;" data-color="#2ecc71"></div>
+                <div class="color-option" style="background-color: #f39c12;" data-color="#f39c12"></div>
+                <div class="color-option" style="background-color: #9b59b6;" data-color="#9b59b6"></div>
+            </div>
+        </div>
+
+        <div class="card-actions" style="margin-top: 30px; text-align: center;">
+            <button id="add-card-btn">Add New Card</button>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">Preferences saved!</div>
+
+    <script>
+        // DOM Elements
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        const colorOptions = document.querySelectorAll('.color-option');
+        const addCardBtn = document.getElementById('add-card-btn');
+        const cardContainer = document.getElementById('card-container');
+        const notification = document.getElementById('notification');
+
+        // Function to show notification
+        function showNotification(message) {
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Function to load user preferences
+        function loadUserPreferences() {
+            // Load theme preference
+            const isDarkTheme = localStorage.getItem('darkTheme') === 'true';
+            if (isDarkTheme) {
+                body.classList.add('dark-theme');
+                themeToggle.classList.add('dark');
+            }
+            
+            // Load color preference
+            const savedColor = localStorage.getItem('accentColor');
+            if (savedColor) {
+                document.documentElement.style.setProperty('--primary-color', savedColor);
+                
+                // Update selected color in UI
+                colorOptions.forEach(option => {
+                    if (option.getAttribute('data-color') === savedColor) {
+                        option.classList.add('selected');
+                    } else {
+                        option.classList.remove('selected');
+                    }
+                });
+            }
+        }
+
+        // Function to save user preferences
+        function saveUserPreferences(preferences) {
+            for (const [key, value] of Object.entries(preferences)) {
+                localStorage.setItem(key, value);
+            }
+            
+            showNotification('Preferences saved!');
+        }
+
+        // Toggle theme
+        themeToggle.addEventListener('click', () => {
+            themeToggle.classList.toggle('dark');
+            body.classList.toggle('dark-theme');
+            
+            // Save preference to localStorage
+            const isDarkTheme = body.classList.contains('dark-theme');
+            saveUserPreferences({ 'darkTheme': isDarkTheme });
+        });
+
+        // Color preference selection
+        colorOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                // Remove selected class from all options
+                colorOptions.forEach(op => op.classList.remove('selected'));
+                
+                // Add selected class to clicked option
+                option.classList.add('selected');
+                
+                // Get the selected color
+                const selectedColor = option.getAttribute('data-color');
+                
+                // Update CSS variable
+                document.documentElement.style.setProperty('--primary-color', selectedColor);
+                
+                // Save to localStorage
+                saveUserPreferences({ 'accentColor': selectedColor });
+            });
+        });
+
+        // Add new card with animation
+        addCardBtn.addEventListener('click', () => {
+            const cardTitles = ['Tips & Tricks', 'Resources', 'Feedback', 'Settings', 'About Us'];
+            const randomTitle = cardTitles[Math.floor(Math.random() * cardTitles.length)];
+            
+            const newCard = document.createElement('div');
+            newCard.className = 'card new-card';
+            newCard.innerHTML = `
+                <h2>${randomTitle}</h2>
+                <div class="card-content">
+                    <p>This is a new card added dynamically with an entrance animation.</p>
+                </div>
+                <button>View Details</button>
+            `;
+            
+            cardContainer.appendChild(newCard);
+            
+            // After animation completes, remove the animation class
+            setTimeout(() => {
+                newCard.classList.remove('new-card');
+            }, 500);
+        });
+
+        // Initialize by loading user preferences
+        loadUserPreferences();
+
+        // Add button click effects
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (this.id !== 'add-card-btn') {
+                    // Create ripple effect for buttons except the add card button
+                    const ripple = document.createElement('span');
+                    ripple.classList.add('ripple');
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
